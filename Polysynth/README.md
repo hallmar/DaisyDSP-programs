@@ -22,6 +22,10 @@ A 4 voice polysynth for the *[Electrosmith Daisy POD](https://www.electro-smith.
 * add Moog ladder filter
 * add waveshape selection
 * add envelope that opens up filter
+
+## Libraries used
+https://github.com/electro-smith/libDaisy/tree/master/examples
+https://github.com/electro-smith/DaisySP
   
 
 
