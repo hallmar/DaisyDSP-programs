@@ -15,7 +15,7 @@ https://www.electro-smith.com/daisy/pod
 | --- | --- | --- |
 | Knob 1 | Envelope attack | Shifts the whole chord |
 | Knob 2 | Envelope decay | 0 – 4 |
-| Encoder | Rotate: Cycle through different chord types<br>Press: Reset to the first chord | |
+| Encoder | NA | |
 | LED | Voice indicator | |
 
 ## To-Do
