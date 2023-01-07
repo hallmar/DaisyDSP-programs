@@ -24,8 +24,8 @@ A 4 voice polysynth for the *[Electrosmith Daisy POD](https://www.electro-smith.
 * add envelope that opens up filter
 
 ## Libraries used
-https://github.com/electro-smith/libDaisy/tree/master/examples
-https://github.com/electro-smith/DaisySP
+[libDaisy](https://github.com/electro-smith/libDaisy) for MIDI handling and other miscellaneous functions.
+[DaisySP](https://github.com/electro-smith/DaisySP) for audio DSP
   
 
 
