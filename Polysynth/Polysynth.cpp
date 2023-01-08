@@ -17,17 +17,19 @@ Pushbutton1: waveshape (WIP)
 
 #include "daisy_pod.h"
 #include "daisysp.h"
+#include "settings.h"
 
 using namespace daisy;
 using namespace daisysp;
 
 #define voicecount 4
+#define NUM_WAVEFORMS 4
 
 uint8_t voicenote[voicecount] = {0,0,0,0};
 bool voicetrig[voicecount] = {0,0,0,0};//kind of redundant as of now since the envelopes is an AD envelopes. Not ADSR
 uint8_t voicehist[voicecount] = {4, 3, 2, 1}; //use this for round robin voice allocation method
 Color      colors[10];
-
+uint8_t waveform = 0; 
 
 Logger<LOGGER_SEMIHOST> logger;
 
@@ -48,6 +50,13 @@ struct filtStruct
     Parameter envFiltParam;
 };
 
+uint8_t waveforms[NUM_WAVEFORMS] = {
+    Oscillator::WAVE_SIN,
+    Oscillator::WAVE_TRI,
+    Oscillator::WAVE_POLYBLEP_SAW,
+    Oscillator::WAVE_POLYBLEP_SQUARE
+};
+
 DaisyPod   hw;
 Oscillator osc[voicecount];
 Parameter  p_envf, p_decay;
@@ -55,10 +64,6 @@ Parameter  p_envf, p_decay;
 MidiUsbHandler midi; //initialize midi object
 envStruct envelopes[voicecount]; // envelopes struct
 filtStruct   filter; // filter struct
-
-void UpdateControls();
-void NoteON(uint8_t note);
-
 
 
 static void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
@@ -70,6 +75,18 @@ static void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
     for(int i = 0; i < voicecount; i++)
     {
         osc[i].SetFreq(mtof(voicenote[i]));
+        osc[i].SetWaveform(waveforms[waveform]);
+    }
+
+    if(hw.button2.RisingEdge())
+    {
+        waveform--;
+        waveform = DSY_CLAMP(waveform, 0, NUM_WAVEFORMS);
+    }
+    if(hw.button1.RisingEdge())
+    {
+        waveform++;
+        waveform = DSY_CLAMP(waveform, 0, NUM_WAVEFORMS);
     }
 
     // Audio Loop
@@ -105,7 +122,7 @@ void InitSynth(float samplerate)
     {
         osc[i].Init(samplerate);
         osc[i].SetAmp(0.1f);
-        osc[i].SetWaveform(Oscillator::WAVE_SIN);
+        osc[i].SetWaveform(waveforms[waveform]);
         osc[i].SetFreq( mtof(voicenote[i]) );
     }
 }
