@@ -19,9 +19,10 @@ A 4 voice polysynth for the *[Electrosmith Daisy POD](https://www.electro-smith.
 | LED | Voice indicator | |
 
 ## To-Do
-* add Moog ladder filter
-* add waveshape selection
-* add envelope that opens up filter
+* change to Phase Modulation synthesis or Frequency Modulation
+* map knob 1 to FM/PM amount
+* map rotary encoder to ratio between operators
+* switches change FM/PM algorithm
 
 ## Libraries used
 [libDaisy](https://github.com/electro-smith/libDaisy) for MIDI handling and other miscellaneous functions.
