@@ -78,11 +78,6 @@ static void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
         osc[i].SetWaveform(waveforms[waveform]);
     }
 
-    if(hw.button2.RisingEdge())
-    {
-        waveform--;
-        waveform = DSY_CLAMP(waveform, 0, NUM_WAVEFORMS);
-    }
     if(hw.button1.RisingEdge())
     {
         waveform++;
@@ -180,22 +175,20 @@ int main(void)
 
     while(1) 
     {
- 	 /** Listen to MIDI for new changes */
+ 	 
         midi.Listen();
         hw.midi.Listen();
-        /** When there are messages waiting in the queue... */
-        while(midi.HasEvents())
+        
+        while(midi.HasEvents()) //if new midi event
         {
-            /** Pull the oldest one from the list... */
-            auto msg = midi.PopEvent();
+           
+            auto msg = midi.PopEvent(); //pop oldest event from stack
             switch(msg.type)
             {
                 case NoteOn:
                 {
-                    /** and change the frequency of the oscillator */
                     auto note_msg = msg.AsNoteOn();
-                    //osc[0].SetFreq(mtof(note_msg.note));
-                    NoteON(note_msg.note);
+                    NoteON(note_msg.note); //call voice allocation
                     hw.UpdateLeds();
                 }
                 break;
@@ -205,15 +198,13 @@ int main(void)
         }   
         while(hw.midi.HasEvents())
         {
-            /** Pull the oldest one from the list... */
+            
             auto msg = hw.midi.PopEvent();
             switch(msg.type)
             {
                 case NoteOn:
-                {
-                    /** and change the frequency of the oscillator */
+                {  
                     auto note_msg = msg.AsNoteOn();
-                    //osc[0].SetFreq(mtof(note_msg.note));
                     NoteON(note_msg.note);
                     hw.UpdateLeds();
                 }
@@ -232,7 +223,7 @@ void UpdateEncoder()
     
     }
 
-    //chordNum += hw.encoder.Increment();
+
 }
 
 void UpdateKnobs()
@@ -274,7 +265,6 @@ void NoteON(uint8_t note)
     osc[0].SetFreq(mtof(note));
     envelopes[0].env.Trigger();
     hw.led1.SetColor(colors[3]);
-    
     return;
   }
 
@@ -292,7 +282,6 @@ void NoteON(uint8_t note)
     envelopes[1].env.Trigger();
     hw.led1.SetColor(colors[4]);
     return;
-
   }
 
   if (voicehist[0] == 3)
@@ -309,8 +298,6 @@ void NoteON(uint8_t note)
     envelopes[2].env.Trigger();
     hw.led1.SetColor(colors[5]);
     return;
-
-
   }
 
   if (voicehist[0] == 4)
